@@ -11,12 +11,13 @@
 
 <div class="row">
       <div class="large-3 columns">
-        <h1><img src="assets/img/logo.png"/></h1>
+        <h1><img src="{{URL::asset('assets/img/logo.png')}}"/></h1>
       </div>
       <div class="large-9 columns">
         <ul class="right button-group">
           <li><a href="" class="button">Inicio</a></li>
-          <li><a href="" class="button">Nuevo usuario</a></li>
+            <li><a href="" class="button">Precio</a></li>
+          <li><a href="/add" class="button">Nuevo usuario</a></li>
         </ul>
       </div>
 </div>

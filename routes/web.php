@@ -12,10 +12,38 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $client = new App\Client;
+    $clients = $client->client_container;
+
+    return view('index', ['clients' => $clients]);
 });
 
+Route::get('/details', function (){
+    $clientObject = new App\Client;
+    $clients = $clientObject->client_container;
+    Request::flash();
+    $id = Request::input('id');
+    $data = [];
+    $data['name'] = $clients[$id]['name'];
+    $data['email'] = $clients[$id]['email'];
+    return view('details', $data);
+});
+
+Route::post('/details', function (){
+    return view('details', ['post' => true]);
+});
+
+Route::get('/add', function (){
+    return view('cms');
+});
+
+Route::get('client/create', 'ClientController@create');
+Route::post('client/create', 'ClientController@store');
+
 Route::get('/found', function () {
+    if(!Auth::check()){
+        return redirect('/home');
+    }
     return view('foundation');
 });
 
@@ -23,8 +51,11 @@ Route::get('/prices', function () {
     return view('price');
 });
 
+
 Route::match(['get', 'post'],'/form', function(){
-   return view('form');
+   $name = Request::input('email');
+   $lang = Request::input('lang');
+   return view('form', ['email' => $name, 'language' => $lang]);
 });
 
 //Route::post('/form', function (){
@@ -56,3 +87,17 @@ Route::get('create_user', ['uses' => 'ArticlesController@create', 'as' => 'creat
 Route::resource('users', 'UsersController', ['names' => [
     'create' => 'users.build'
 ]]);
+
+
+//Autenticacion
+Route::get('auth/login', 'Auth\AuthController@getLogin');
+Route::post('auth/login', 'Auth\AuthController@getLogin');
+Route::get('auth/register', 'Auth\AuthController@getRegister');
+Route::post('auth/register', 'Auth\AuthController@getRegister');
+Route::post('auth/logout', function(){
+    Auth::logout();
+    return redirect('/home');
+});
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');
